@@ -16,6 +16,8 @@ export type Offer = {
   id: string;
   kind: CodeKind;
   era: Era;
+  /** Cropped portraits of the avatars this code unlocks. Same set in every region. */
+  images?: string[];
   title: string;
   added: string;
   until?: string;
@@ -35,6 +37,13 @@ export const offers: Offer[] = [
     id: "spiderman-bnd",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/spiderman-1.webp",
+      "/avatars/spiderman-2.webp",
+      "/avatars/spiderman-3.webp",
+      "/avatars/spiderman-4.webp",
+      "/avatars/spiderman-5.webp",
+    ],
     title: "Spider-Man: Brand New Day",
     added: "2026-10-06",
     until: "2027-10-06",
@@ -56,6 +65,12 @@ export const offers: Offer[] = [
     id: "helldivers-2",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/helldivers-1.webp",
+      "/avatars/helldivers-2.webp",
+      "/avatars/helldivers-3.webp",
+      "/avatars/helldivers-4.webp",
+    ],
     title: "Helldivers 2",
     added: "2026-08-19",
     summary: {
@@ -94,6 +109,12 @@ export const offers: Offer[] = [
     id: "tlou-day-2026",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/tlou-1.webp",
+      "/avatars/tlou-2.webp",
+      "/avatars/tlou-3.webp",
+      "/avatars/tlou-4.webp",
+    ],
     title: "The Last of Us Day 2026",
     added: "2026-09-28",
     summary: {
@@ -116,6 +137,11 @@ export const offers: Offer[] = [
     id: "days-of-play-2026",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/days-of-play-1.webp",
+      "/avatars/days-of-play-2.webp",
+      "/avatars/days-of-play-3.webp",
+    ],
     title: "Days of Play 2026",
     added: "2026-05-27",
     summary: {
@@ -138,6 +164,14 @@ export const offers: Offer[] = [
     id: "saros",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/saros-1.webp",
+      "/avatars/saros-2.webp",
+      "/avatars/saros-3.webp",
+      "/avatars/saros-4.webp",
+      "/avatars/saros-5.webp",
+      "/avatars/saros-6.webp",
+    ],
     title: "Saros",
     added: "2026-05-03",
     summary: {
@@ -160,6 +194,12 @@ export const offers: Offer[] = [
     id: "uncharted",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/uncharted-1.webp",
+      "/avatars/uncharted-2.webp",
+      "/avatars/uncharted-3.webp",
+      "/avatars/uncharted-4.webp",
+    ],
     title: "Uncharted 4",
     added: "2026-05-01",
     summary: {
@@ -178,6 +218,16 @@ export const offers: Offer[] = [
     id: "ghost-of-yotei",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/yotei-1.webp",
+      "/avatars/yotei-2.webp",
+      "/avatars/yotei-3.webp",
+      "/avatars/yotei-4.webp",
+      "/avatars/yotei-5.webp",
+      "/avatars/yotei-6.webp",
+      "/avatars/yotei-7.webp",
+      "/avatars/yotei-8.webp",
+    ],
     title: "Ghost of Yōtei",
     added: "2025-12-01",
     summary: {
@@ -222,6 +272,15 @@ export const offers: Offer[] = [
     id: "dave",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/dave-1.webp",
+      "/avatars/dave-2.webp",
+      "/avatars/dave-3.webp",
+      "/avatars/dave-4.webp",
+      "/avatars/dave-5.webp",
+      "/avatars/dave-6.webp",
+      "/avatars/dave-7.webp",
+    ],
     title: "Dave the Diver",
     added: "2026-10-06",
     summary: {
@@ -238,6 +297,17 @@ export const offers: Offer[] = [
     id: "deathloop",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/deathloop-1.webp",
+      "/avatars/deathloop-2.webp",
+      "/avatars/deathloop-3.webp",
+      "/avatars/deathloop-4.webp",
+      "/avatars/deathloop-5.webp",
+      "/avatars/deathloop-6.webp",
+      "/avatars/deathloop-7.webp",
+      "/avatars/deathloop-8.webp",
+      "/avatars/deathloop-9.webp",
+    ],
     title: "Deathloop",
     added: "2026-10-06",
     summary: {
@@ -254,6 +324,11 @@ export const offers: Offer[] = [
     id: "tsushima",
     kind: "avatar",
     era: "2025",
+    images: [
+      "/avatars/tsushima-1.webp",
+      "/avatars/tsushima-2.webp",
+      "/avatars/tsushima-3.webp",
+    ],
     title: "Ghost of Tsushima",
     added: "2025-07-01",
     summary: {
@@ -276,6 +351,9 @@ export const offers: Offer[] = [
     id: "gow",
     kind: "avatar",
     era: "2025",
+    images: [
+      "/avatars/gow-1.webp",
+    ],
     title: "God of War",
     added: "2025-03-01",
     summary: {

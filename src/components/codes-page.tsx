@@ -440,6 +440,21 @@ function OfferCard({
           </>
         ) : null}
       </p>
+      {offer.images?.length ? (
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label={offer.title}>
+          {offer.images.map((src) => (
+            <li key={src}>
+              <img
+                src={src}
+                alt=""
+                width={72}
+                height={72}
+                className="size-[4.5rem] rounded-lg border border-line bg-bg object-cover"
+              />
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <ul className="mt-4 grid gap-2">
         {offer.codes.map((code) => {
           const id = `${offer.id}-${code.code}`;
