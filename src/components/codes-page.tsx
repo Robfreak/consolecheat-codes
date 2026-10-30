@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, Copy, Moon, Sun, Ticket } from "lucide-react";
-import { offers, regionOrder, type Lang, type Offer, type RegionId } from "@/data/codes";
-import { subscribeEmail, unsubscribeEmail } from "@/lib/subscribers.functions";
+import { eraOrder, offers, regionOrder, type Era, type Lang, type Offer, type RegionId } from "@/data/codes";
 
 type KindFilter = "all" | "avatar" | "dlc";
 type RegionFilter = "all" | RegionId;
-type Notice = "saved" | "already" | "removed" | "missing" | "bad" | "fail" | null;
-
-const MAIL_KEY = "consolecheat-codes-mail";
+type EraFilter = "all" | Era;
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -20,32 +17,25 @@ const ui = {
     themeDark: "Dunkel",
     eyebrow: "PSN-Codes · Unlimited",
     title: "Codes, die jeder einlösen kann.",
-    lede: "Mehrfach nutzbare PlayStation-Codes für Avatare und kostenlose DLCs. Kein Shop, keine Banner, nichts Abgelaufenes.",
+    lede: "Mehrfach nutzbare PlayStation-Codes für Avatare und kostenlose DLCs. Kein Shop, keine Banner. Oben die aktuellen Pakete, die älteren stehen extra.",
     freeClaim: "Komplett kostenlos. Auf dieser Seite kostet nichts Geld und es gibt keine Werbung.",
-    mailClaim: "Die Adresse wird nur gespeichert, um neue Codes zu schicken. Kein Verkauf, keine Werbe-Mails.",
     unofficial: "Inoffiziell. Nicht von Sony. Der Code muss zur Region des PSN-Kontos passen.",
-    notifyKicker: "Nur neue Codes",
-    notifyTitle: "Mail, wenn etwas dazukommt",
-    notifyBody: "Kein Newsletter. Keine Angebote. Eine Mail nur, wenn ein neuer Unlimited-Code auf der Liste steht.",
-    emailLabel: "E-Mail",
-    emailPlaceholder: "name@mail.com",
-    subscribe: "Eintragen",
-    unsubscribe: "Austragen",
-    saving: "Speichert …",
-    saved: "Eingetragen. Es kommt nur eine Mail zu neuen Codes.",
-    already: "Diese Adresse ist schon eingetragen.",
-    removed: "Ausgetragen. Es kommt keine Mail mehr.",
-    missing: "Diese Adresse stand nicht auf der Liste.",
-    bad: "Die Adresse sieht nicht gültig aus.",
-    fail: "Speichern ging gerade nicht. Versuch es noch einmal.",
-    codesHeading: "Aktive Codes",
+    codesHeading: "Codes",
     searchLabel: "Suche",
     searchPlaceholder: "Spiel oder Code",
     kindAll: "Alle",
     kindAvatar: "Avatare",
     kindDlc: "Gratis-DLC",
     regionAll: "Alle Regionen",
-    empty: "Dazu liegt gerade kein Unlimited-Code vor. Einmal-Codes und Abgelaufenes stehen hier nicht.",
+    eraAll: "Alle Jahre",
+    era2026: "Aktuell",
+    era2025: "2025",
+    era2024: "2024",
+    eraArchive: "Vor 2024",
+    eraOlder: "Älter. Kann noch gehen, muss aber nicht.",
+    eraDead: "Vor 2024. Oft schon abgelaufen. Ein Fehlversuch sperrt den Code nicht.",
+    searchAll: "Die Suche geht durch alle Jahre.",
+    empty: "Dazu liegt gerade kein Code vor.",
     copy: "Kopieren",
     copied: "Kopiert",
     until: "Bis",
@@ -56,6 +46,8 @@ const ui = {
       "PS5: PlayStation Store, die drei Punkte, Code einlösen. PS4: Store, links Codes einlösen. Die Website und die PlayStation-App gehen auch. Eine falsche Region wird abgelehnt, der Code bleibt für andere gültig.",
     unlimited: "Unlimited",
     fresh: "Neu",
+    older: "Älter",
+    uncertain: "Unsicher",
     avatar: "Avatar",
     dlc: "DLC",
     packs: "Pakete",
@@ -77,32 +69,25 @@ const ui = {
     themeDark: "Dark",
     eyebrow: "PSN codes · unlimited",
     title: "Codes anyone can redeem.",
-    lede: "Multi-use PlayStation codes for avatars and free DLC. No shop, no banners, nothing expired.",
+    lede: "Multi-use PlayStation codes for avatars and free DLC. No shop, no banners. Current packs first, older ones sit apart.",
     freeClaim: "Completely free. Nothing on this page costs money, and there are no ads.",
-    mailClaim: "The address is stored only to send new codes. It is not sold, and there is no promo mail.",
     unofficial: "Unofficial. Not Sony. The code has to match the PSN account region.",
-    notifyKicker: "New codes only",
-    notifyTitle: "Mail when something new lands",
-    notifyBody: "Not a newsletter. No offers. One mail only when a new unlimited code is added.",
-    emailLabel: "Email",
-    emailPlaceholder: "name@mail.com",
-    subscribe: "Subscribe",
-    unsubscribe: "Remove",
-    saving: "Saving …",
-    saved: "Saved. Mail only when a new code is added.",
-    already: "This address is already on the list.",
-    removed: "Removed. No further mail.",
-    missing: "This address was not on the list.",
-    bad: "That address does not look valid.",
-    fail: "Saving failed just now. Try again.",
-    codesHeading: "Active codes",
+    codesHeading: "Codes",
     searchLabel: "Search",
     searchPlaceholder: "Game or code",
     kindAll: "All",
     kindAvatar: "Avatars",
     kindDlc: "Free DLC",
     regionAll: "All regions",
-    empty: "No unlimited code for that yet. Single-use and expired codes stay off this page.",
+    eraAll: "All years",
+    era2026: "Current",
+    era2025: "2025",
+    era2024: "2024",
+    eraArchive: "Before 2024",
+    eraOlder: "Older. It might still work, or it might not.",
+    eraDead: "Before 2024. Often already expired. A failed try does not lock the code.",
+    searchAll: "Search looks through every year.",
+    empty: "No code for that just now.",
     copy: "Copy",
     copied: "Copied",
     until: "Until",
@@ -113,6 +98,8 @@ const ui = {
       "PS5: PlayStation Store, the three dots, Redeem Code. PS4: Store, Redeem Codes in the sidebar. The website and the PlayStation app work too. A wrong region is rejected and the code stays valid for everyone else.",
     unlimited: "Unlimited",
     fresh: "New",
+    older: "Older",
+    uncertain: "Uncertain",
     avatar: "Avatar",
     dlc: "DLC",
     packs: "packs",
@@ -165,11 +152,9 @@ export function CodesPage() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [kind, setKind] = useState<KindFilter>("all");
   const [region, setRegion] = useState<RegionFilter>("all");
+  const [era, setEra] = useState<EraFilter>("2026");
   const [search, setSearch] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
-  const [notice, setNotice] = useState<Notice>(null);
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const storedLang = localStorage.getItem("consolecheat-lang");
@@ -178,11 +163,6 @@ export function CodesPage() {
     applyLang(nextLang);
     const nextTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
     setTheme(nextTheme);
-    const storedMail = localStorage.getItem(MAIL_KEY);
-    if (storedMail) {
-      setEmail(storedMail);
-      setNotice("saved");
-    }
   }, []);
 
   const t = ui[lang];
@@ -190,6 +170,7 @@ export function CodesPage() {
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase();
     return offers
+      .filter((offer) => query || era === "all" || offer.era === era)
       .filter((offer) => kind === "all" || offer.kind === kind)
       .map((offer) => ({
         ...offer,
@@ -207,7 +188,7 @@ export function CodesPage() {
           .toLowerCase();
         return blob.includes(query);
       });
-  }, [kind, lang, region, search]);
+  }, [era, kind, lang, region, search]);
 
   const codeCount = visible.reduce((sum, offer) => sum + offer.codes.length, 0);
 
@@ -217,58 +198,13 @@ export function CodesPage() {
     window.setTimeout(() => setCopied((current) => (current === id ? null : current)), 1600);
   }
 
-  async function onSubscribe(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const trap = form.elements.namedItem("company");
-    const company = trap instanceof HTMLInputElement ? trap.value : "";
-    setBusy(true);
-    setNotice(null);
-    try {
-      const result = await subscribeEmail({ data: { email, company } });
-      setNotice(result.status);
-      if (result.status === "saved" || result.status === "already") {
-        localStorage.setItem(MAIL_KEY, email.trim().toLowerCase());
-      }
-    } catch (error) {
-      setNotice(error instanceof Error && error.message === "email" ? "bad" : "fail");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function onUnsubscribe() {
-    setBusy(true);
-    setNotice(null);
-    try {
-      const result = await unsubscribeEmail({ data: { email, company: "" } });
-      if (result.removed) {
-        localStorage.removeItem(MAIL_KEY);
-        setNotice("removed");
-      } else {
-        setNotice("missing");
-      }
-    } catch (error) {
-      setNotice(error instanceof Error && error.message === "email" ? "bad" : "fail");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const noticeText =
-    notice === "saved"
-      ? t.saved
-      : notice === "already"
-        ? t.already
-        : notice === "removed"
-          ? t.removed
-          : notice === "missing"
-            ? t.missing
-            : notice === "bad"
-              ? t.bad
-              : notice === "fail"
-                ? t.fail
-                : null;
+  const eraLabels: Record<Era | "all", string> = {
+    all: t.eraAll,
+    "2026": t.era2026,
+    "2025": t.era2025,
+    "2024": t.era2024,
+    archive: t.eraArchive,
+  };
 
   return (
     <div className="min-h-screen">
@@ -323,62 +259,8 @@ export function CodesPage() {
           {t.title}
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{t.lede}</p>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <p className="panel rounded-xl px-4 py-4 text-base font-medium leading-relaxed text-fg">{t.freeClaim}</p>
-          <p className="panel rounded-xl px-4 py-4 text-base font-medium leading-relaxed text-fg">{t.mailClaim}</p>
-        </div>
+        <p className="mt-6 panel rounded-xl px-4 py-4 text-base font-medium leading-relaxed text-fg">{t.freeClaim}</p>
         <p className="mt-4 text-sm text-subtle">{t.unofficial}</p>
-
-        <section id="notify" className="panel mt-10 scroll-mt-28 rounded-xl p-5 sm:p-6">
-          <p className="eyebrow text-xs font-medium uppercase text-steel">{t.notifyKicker}</p>
-          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight">{t.notifyTitle}</h2>
-          <p className="mt-2 max-w-2xl leading-relaxed text-muted">{t.notifyBody}</p>
-          <form className="mt-5 flex flex-col gap-2 sm:flex-row" noValidate onSubmit={onSubscribe}>
-            <label className="sr-only" htmlFor="notify-email">
-              {t.emailLabel}
-            </label>
-            <input
-              id="notify-email"
-              name="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              required
-              value={email}
-              placeholder={t.emailPlaceholder}
-              onChange={(event) => {
-                setEmail(event.target.value);
-                if (notice === "bad" || notice === "fail") setNotice(null);
-              }}
-              className="h-11 min-w-0 flex-1 rounded-lg border border-line bg-bg px-3 text-fg outline-none placeholder:text-subtle"
-            />
-            <input name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="sr-only" />
-            <button
-              type="submit"
-              disabled={busy}
-              className="h-11 shrink-0 rounded-lg bg-accent px-4 font-medium text-accent-fg disabled:opacity-60"
-            >
-              {busy ? t.saving : t.subscribe}
-            </button>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={onUnsubscribe}
-              className="h-11 shrink-0 rounded-lg border border-line bg-surface px-4 font-medium text-fg disabled:opacity-60"
-            >
-              {t.unsubscribe}
-            </button>
-          </form>
-          <p
-            className={notice === "bad" || notice === "fail" ? "mt-3 text-sm text-bad" : "mt-3 text-sm text-subtle"}
-            role="status"
-          >
-            {noticeText ?? t.mailClaim}
-          </p>
-        </section>
 
         <section id="codes" className="mt-10 scroll-mt-28">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -441,6 +323,28 @@ export function CodesPage() {
             </select>
           </div>
 
+          <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={t.eraAll}>
+            {(["2026", ...eraOrder.filter((id) => id !== "2026"), "all"] as const).map((id) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={era === id}
+                onClick={() => setEra(id)}
+                className={
+                  "h-11 rounded-lg border px-4 text-sm font-medium " +
+                  (era === id ? "border-accent bg-accent text-accent-fg" : "border-line bg-surface text-fg")
+                }
+              >
+                {eraLabels[id]}
+              </button>
+            ))}
+          </div>
+          {search.trim() ? <p className="mt-3 text-sm text-subtle">{t.searchAll}</p> : null}
+          {!search.trim() && (era === "2025" || era === "2024") ? (
+            <p className="mt-3 text-sm text-subtle">{t.eraOlder}</p>
+          ) : null}
+          {!search.trim() && era === "archive" ? <p className="mt-3 text-sm text-subtle">{t.eraDead}</p> : null}
+
           {visible.length === 0 ? (
             <p className="panel mt-4 rounded-xl px-5 py-8 text-muted">{t.empty}</p>
           ) : (
@@ -475,7 +379,6 @@ export function CodesPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm leading-relaxed text-subtle sm:px-6">
           <p className="text-fg">{t.brand}</p>
           <p className="text-fg">{t.freeClaim}</p>
-          <p>{t.mailClaim}</p>
           <p>{t.footerNote}</p>
         </div>
       </footer>
@@ -496,7 +399,14 @@ function OfferCard({
   copied: string | null;
   onCopy: (id: string, value: string) => void;
 }) {
-  const fresh = offer.added >= "2026-09-01";
+  const marker =
+    offer.era === "2026" && offer.added >= "2026-09-01"
+      ? t.fresh
+      : offer.era === "archive"
+        ? t.uncertain
+        : offer.era === "2026"
+          ? null
+          : t.older;
   return (
     <article className="panel rounded-xl p-5 sm:p-6">
       <div className="flex flex-wrap items-center gap-2">
@@ -504,18 +414,31 @@ function OfferCard({
         <span className="rounded-md bg-raised px-2 py-1 text-xs font-medium text-steel">
           {offer.kind === "avatar" ? t.avatar : t.dlc}
         </span>
-        {fresh ? <span className="rounded-md bg-raised px-2 py-1 text-xs font-medium text-warn">{t.fresh}</span> : null}
+        {marker ? (
+          <span
+            className={
+              "rounded-md bg-raised px-2 py-1 text-xs font-medium " +
+              (offer.era === "archive" ? "text-warn" : "text-steel")
+            }
+          >
+            {marker}
+          </span>
+        ) : null}
       </div>
       <h3 className="mt-4 font-display text-2xl font-semibold tracking-tight">{offer.title}</h3>
       <p className="mt-2 max-w-3xl leading-relaxed text-muted">{offer.summary[lang]}</p>
       <p className="mt-3 text-sm text-subtle">
         {t.listed} {formatDate(offer.added, lang)}
         {offer.until ? ` · ${t.until} ${formatDate(offer.until, lang)}` : ""}
-        {" · "}
-        {t.source}{" "}
-        <a href={offer.source.url} className="text-steel underline-offset-4 hover:underline">
-          {offer.source.name}
-        </a>
+        {offer.source ? (
+          <>
+            {" · "}
+            {t.source}{" "}
+            <a href={offer.source.url} className="text-steel underline-offset-4 hover:underline">
+              {offer.source.name}
+            </a>
+          </>
+        ) : null}
       </p>
       <ul className="mt-4 grid gap-2">
         {offer.codes.map((code) => {

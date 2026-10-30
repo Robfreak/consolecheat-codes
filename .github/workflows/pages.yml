@@ -1,0 +1,63 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm install
+      - name: Build
+        env:
+          VITE_AUTH_ENABLED: "false"
+        run: npm run build
+      - name: Static snapshot
+        run: |
+          node scripts/with-app-env.mjs vite preview --host 127.0.0.1 --port 8081 > /tmp/preview.log 2>&1 &
+          echo $! > /tmp/preview.pid
+          ok=0
+          for i in $(seq 1 90); do
+            if curl -sfL --max-time 5 http://127.0.0.1:8081/ -o .vercel/output/static/index.html; then
+              ok=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ok" != 1 ]; then
+            cat /tmp/preview.log
+            exit 1
+          fi
+          cp .vercel/output/static/index.html .vercel/output/static/404.html
+          printf '%s\n' codes.consolecheat.com > .vercel/output/static/CNAME
+          touch .vercel/output/static/.nojekyll
+          kill "$(cat /tmp/preview.pid)" || true
+      - name: Upload
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vercel/output/static
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

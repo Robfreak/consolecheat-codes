@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Unlimited-Use-Codes für kostenlose PSN-Avatare und Gratis-DLCs. Keine Werbung. Die Mail dient nur neuen Codes.",
+          "Unlimited-Use-Codes für kostenlose PSN-Avatare und Gratis-DLCs. Keine Werbung.",
       },
       { name: "theme-color", content: "#07090e" },
     ],
