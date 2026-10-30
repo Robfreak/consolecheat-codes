@@ -92,6 +92,18 @@ export const offers: Offer[] = [
     id: "black-desert-kr",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/bdo-1.webp",
+      "/avatars/bdo-2.webp",
+      "/avatars/bdo-3.webp",
+      "/avatars/bdo-4.webp",
+      "/avatars/bdo-5.webp",
+      "/avatars/bdo-6.webp",
+      "/avatars/bdo-7.webp",
+      "/avatars/bdo-8.webp",
+      "/avatars/bdo-9.webp",
+      "/avatars/bdo-10.webp",
+    ],
     title: "Black Desert",
     added: "2026-10-21",
     until: "2027-03-31",
@@ -250,6 +262,14 @@ export const offers: Offer[] = [
     id: "ronin",
     kind: "avatar",
     era: "2026",
+    images: [
+      "/avatars/ronin-1.webp",
+      "/avatars/ronin-2.webp",
+      "/avatars/ronin-3.webp",
+      "/avatars/ronin-4.webp",
+      "/avatars/ronin-5.webp",
+      "/avatars/ronin-6.webp",
+    ],
     title: "Rise of the Rōnin",
     added: "2026-10-06",
     summary: {
@@ -376,6 +396,13 @@ export const offers: Offer[] = [
     id: "psplus-15",
     kind: "avatar",
     era: "2025",
+    images: [
+      "/avatars/p15-3.webp",
+      "/avatars/p15-2.webp",
+      "/avatars/p15-5.webp",
+      "/avatars/p15-4.webp",
+      "/avatars/p15-1.webp",
+    ],
     title: "PS Plus, 15 Jahre",
     added: "2025-08-01",
     summary: {
@@ -440,6 +467,7 @@ export const offers: Offer[] = [
     id: "wrap-up-2024",
     kind: "avatar",
     era: "2024",
+    images: ["/avatars/wrap24-1.webp"],
     title: "Wrap-Up 2024",
     added: "2024-12-01",
     summary: {
@@ -457,6 +485,11 @@ export const offers: Offer[] = [
     id: "tlou-day-2024",
     kind: "avatar",
     era: "2024",
+    images: [
+      "/avatars/tlou24-1.webp",
+      "/avatars/tlou24-2.webp",
+      "/avatars/tlou24-3.webp",
+    ],
     title: "The Last of Us Day 2024",
     added: "2024-09-26",
     summary: {
@@ -473,6 +506,12 @@ export const offers: Offer[] = [
     id: "astro-dop-2024",
     kind: "avatar",
     era: "2024",
+    images: [
+      "/avatars/astro-1.webp",
+      "/avatars/astro-2.webp",
+      "/avatars/astro-3.webp",
+      "/avatars/astro-4.webp",
+    ],
     title: "Astro Bot, Days of Play 2024",
     added: "2024-06-01",
     summary: {
@@ -507,6 +546,14 @@ export const offers: Offer[] = [
     id: "ronin-2024",
     kind: "avatar",
     era: "2024",
+    images: [
+      "/avatars/ronin-1.webp",
+      "/avatars/ronin-2.webp",
+      "/avatars/ronin-3.webp",
+      "/avatars/ronin-4.webp",
+      "/avatars/ronin-5.webp",
+      "/avatars/ronin-6.webp",
+    ],
     title: "Rise of the Rōnin, Einzelavatare",
     added: "2024-03-22",
     summary: {
@@ -530,6 +577,13 @@ export const offers: Offer[] = [
     id: "season-of-play-2023",
     kind: "avatar",
     era: "archive",
+    images: [
+      "/avatars/sop-1.webp",
+      "/avatars/sop-2.webp",
+      "/avatars/sop-3.webp",
+      "/avatars/sop-4.webp",
+      "/avatars/sop-5.webp",
+    ],
     title: "Season of Play 2023",
     added: "2023-12-01",
     summary: {
@@ -546,6 +600,12 @@ export const offers: Offer[] = [
     id: "psplus-2023",
     kind: "avatar",
     era: "archive",
+    images: [
+      "/avatars/p23-1.webp",
+      "/avatars/p23-2.webp",
+      "/avatars/p23-3.webp",
+      "/avatars/p23-4.webp",
+    ],
     title: "PS Plus Jubiläum 2023",
     added: "2023-06-01",
     summary: {
@@ -561,6 +621,19 @@ export const offers: Offer[] = [
     id: "hfw",
     kind: "avatar",
     era: "archive",
+    images: [
+      "/avatars/hfw-1.webp",
+      "/avatars/hfw-2.webp",
+      "/avatars/hfw-3.webp",
+      "/avatars/hfw-4.webp",
+      "/avatars/hfw-5.webp",
+      "/avatars/hfw-6.webp",
+      "/avatars/hfw-7.webp",
+      "/avatars/hfw-8.webp",
+      "/avatars/hfw-9.webp",
+      "/avatars/hfw-10.webp",
+      "/avatars/hfw-11.webp",
+    ],
     title: "Horizon Forbidden West",
     added: "2023-02-01",
     summary: {
@@ -583,6 +656,12 @@ export const offers: Offer[] = [
     id: "death-stranding",
     kind: "avatar",
     era: "archive",
+    images: [
+      "/avatars/ds-1.webp",
+      "/avatars/ds-2.webp",
+      "/avatars/ds-3.webp",
+      "/avatars/ds-4.webp",
+    ],
     title: "Death Stranding 2, BB Pod",
     added: "2022-12-01",
     summary: {
@@ -605,6 +684,7 @@ export const offers: Offer[] = [
     id: "wrap-up-2022-eu",
     kind: "avatar",
     era: "archive",
+    images: ["/avatars/wrap22-1.webp"],
     title: "Wrap-Up 2022, Astro Bot",
     added: "2022-12-01",
     summary: {
@@ -623,6 +703,7 @@ export const offers: Offer[] = [
     id: "wrap-up-2022",
     kind: "avatar",
     era: "archive",
+    images: ["/avatars/wrap22-1.webp"],
     title: "Wrap-Up 2022",
     added: "2022-12-01",
     summary: {
@@ -642,6 +723,7 @@ export const offers: Offer[] = [
     id: "re-village",
     kind: "avatar",
     era: "archive",
+    images: ["/avatars/re-1.webp", "/avatars/re-2.webp"],
     title: "Resident Evil Village",
     added: "2021-05-01",
     summary: {
