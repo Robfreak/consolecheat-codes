@@ -6,7 +6,7 @@ Unlimited-Use-Codes für kostenlose PSN-Avatare und Gratis-DLCs. Gleiches Ersche
 
 ## Codes pflegen
 
-Neue Codes nur in [src/data/codes.ts](src/data/codes.ts) eintragen, wenn sie mehrfach einlösbar sind und eine öffentliche Quelle haben. Aktuelle Pakete bekommen `era: "2026"`. Ältere Jahre bleiben in der Liste, aber getrennt. Ein Gratis-DLC kommt in dieselbe Liste mit `kind: "dlc"`.
+Neue Codes nur in [src/data/codes.ts](src/data/codes.ts) eintragen, wenn sie mehrfach einlösbar sind und eine öffentliche Quelle haben. `Aktuell` zeigt jeden Code, der im Oktober 2026 noch galt: Jahr 2026, plus `live: true` an älteren Paketen oder einzelnen Codes. Die Jahresfilter bleiben daneben. Texte der Seite stehen in [src/data/ui.ts](src/data/ui.ts), die Pakettexte in [src/data/summaries.ts](src/data/summaries.ts). Ein Gratis-DLC kommt in dieselbe Liste mit `kind: "dlc"`.
 
 ## Lokal
 

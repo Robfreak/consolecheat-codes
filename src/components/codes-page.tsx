@@ -1,125 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
 import { Check, Copy, Moon, Sun, Ticket } from "lucide-react";
-import { eraOrder, offers, regionOrder, type Era, type Lang, type Offer, type RegionId } from "@/data/codes";
+import { codeWorks, langs, offers, regionOrder, type Era, type Lang, type Offer, type RegionId } from "@/data/codes";
+import { endonyms } from "@/data/locale";
+import { ui, type Ui } from "@/data/ui";
 
 type KindFilter = "all" | "avatar" | "dlc";
 type RegionFilter = "all" | RegionId;
-type EraFilter = "all" | Era;
-
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-const ui = {
-  de: {
-    brand: "consolecheat",
-    hub: "Hub",
-    language: "Sprache",
-    themeLight: "Hell",
-    themeDark: "Dunkel",
-    eyebrow: "PSN-Codes · Unlimited",
-    title: "Codes, die jeder einlösen kann.",
-    lede: "Mehrfach nutzbare PlayStation-Codes für Avatare und kostenlose DLCs. Kein Shop, keine Banner. Oben die aktuellen Pakete, die älteren stehen extra.",
-    freeClaim: "Komplett kostenlos. Auf dieser Seite kostet nichts Geld und es gibt keine Werbung.",
-    unofficial: "Inoffiziell. Nicht von Sony. Der Code muss zur Region des PSN-Kontos passen.",
-    codesHeading: "Codes",
-    searchLabel: "Suche",
-    searchPlaceholder: "Spiel oder Code",
-    kindAll: "Alle",
-    kindAvatar: "Avatare",
-    kindDlc: "Gratis-DLC",
-    regionAll: "Alle Regionen",
-    eraAll: "Alle Jahre",
-    era2026: "Aktuell",
-    era2025: "2025",
-    era2024: "2024",
-    eraArchive: "Vor 2024",
-    eraOlder: "Älter. Kann noch gehen, muss aber nicht.",
-    eraDead: "Vor 2024. Oft schon abgelaufen. Ein Fehlversuch sperrt den Code nicht.",
-    searchAll: "Die Suche geht durch alle Jahre.",
-    empty: "Dazu liegt gerade kein Code vor.",
-    copy: "Kopieren",
-    copied: "Kopiert",
-    until: "Bis",
-    listed: "Stand",
-    source: "Quelle",
-    howTitle: "Einlösen",
-    howBody:
-      "PS5: PlayStation Store, die drei Punkte, Code einlösen. PS4: Store, links Codes einlösen. Die Website und die PlayStation-App gehen auch. Eine falsche Region wird abgelehnt, der Code bleibt für andere gültig.",
-    unlimited: "Unlimited",
-    fresh: "Neu",
-    older: "Älter",
-    uncertain: "Unsicher",
-    avatar: "Avatar",
-    dlc: "DLC",
-    packs: "Pakete",
-    footerNote: "Bezahlt wird nirgends auf dieser Seite. Sie ist nicht Sony.",
-    regions: {
-      americas: "Amerika",
-      europe: "Europa",
-      japan: "Japan",
-      korea: "Korea",
-      asia: "Asien",
-      unknown: "Region offen",
-    } satisfies Record<RegionId, string>,
-  },
-  en: {
-    brand: "consolecheat",
-    hub: "Hub",
-    language: "Language",
-    themeLight: "Light",
-    themeDark: "Dark",
-    eyebrow: "PSN codes · unlimited",
-    title: "Codes anyone can redeem.",
-    lede: "Multi-use PlayStation codes for avatars and free DLC. No shop, no banners. Current packs first, older ones sit apart.",
-    freeClaim: "Completely free. Nothing on this page costs money, and there are no ads.",
-    unofficial: "Unofficial. Not Sony. The code has to match the PSN account region.",
-    codesHeading: "Codes",
-    searchLabel: "Search",
-    searchPlaceholder: "Game or code",
-    kindAll: "All",
-    kindAvatar: "Avatars",
-    kindDlc: "Free DLC",
-    regionAll: "All regions",
-    eraAll: "All years",
-    era2026: "Current",
-    era2025: "2025",
-    era2024: "2024",
-    eraArchive: "Before 2024",
-    eraOlder: "Older. It might still work, or it might not.",
-    eraDead: "Before 2024. Often already expired. A failed try does not lock the code.",
-    searchAll: "Search looks through every year.",
-    empty: "No code for that just now.",
-    copy: "Copy",
-    copied: "Copied",
-    until: "Until",
-    listed: "Listed",
-    source: "Source",
-    howTitle: "Redeem",
-    howBody:
-      "PS5: PlayStation Store, the three dots, Redeem Code. PS4: Store, Redeem Codes in the sidebar. The website and the PlayStation app work too. A wrong region is rejected and the code stays valid for everyone else.",
-    unlimited: "Unlimited",
-    fresh: "New",
-    older: "Older",
-    uncertain: "Uncertain",
-    avatar: "Avatar",
-    dlc: "DLC",
-    packs: "packs",
-    footerNote: "Nothing is paid for on this page. It is not Sony.",
-    regions: {
-      americas: "Americas",
-      europe: "Europe",
-      japan: "Japan",
-      korea: "Korea",
-      asia: "Asia",
-      unknown: "Region open",
-    } satisfies Record<RegionId, string>,
-  },
-} as const;
+type EraFilter = "live" | "all" | Era;
 
 function formatDate(iso: string, lang: Lang) {
   const [year, month, day] = iso.split("-");
   if (!year || !month || !day) return iso;
   if (lang === "de") return `${day}.${month}.${year}`;
-  return `${Number(day)} ${months[Number(month) - 1]} ${year}`;
+  const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+  const locale = lang === "zh" ? "zh-Hans" : lang;
+  return new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+}
+
+function isLang(value: string | null): value is Lang {
+  return !!value && (langs as readonly string[]).includes(value);
+}
+
+function preferredLang(): Lang {
+  const stored = localStorage.getItem("consolecheat-lang");
+  if (isLang(stored)) return stored;
+  const nav = (navigator.languages?.[0] || navigator.language || "de").toLowerCase();
+  if (nav.startsWith("zh")) return "zh";
+  const base = nav.split("-")[0] ?? "de";
+  return isLang(base) ? base : "de";
 }
 
 function applyLang(next: Lang) {
@@ -152,13 +60,12 @@ export function CodesPage() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [kind, setKind] = useState<KindFilter>("all");
   const [region, setRegion] = useState<RegionFilter>("all");
-  const [era, setEra] = useState<EraFilter>("2026");
+  const [era, setEra] = useState<EraFilter>("live");
   const [search, setSearch] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedLang = localStorage.getItem("consolecheat-lang");
-    const nextLang: Lang = storedLang === "en" ? "en" : "de";
+    const nextLang = preferredLang();
     setLang(nextLang);
     applyLang(nextLang);
     const nextTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
@@ -170,19 +77,23 @@ export function CodesPage() {
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase();
     return offers
-      .filter((offer) => query || era === "all" || offer.era === era)
+      .filter((offer) => query || era === "all" || (era === "live" ? offer.codes.some((code) => codeWorks(offer, code)) : offer.era === era))
       .filter((offer) => kind === "all" || offer.kind === kind)
       .map((offer) => ({
         ...offer,
-        codes: offer.codes.filter((code) => region === "all" || code.region === region),
+        codes: offer.codes.filter((code) => {
+          if (region !== "all" && code.region !== region) return false;
+          if (!query && era === "live" && !codeWorks(offer, code)) return false;
+          return true;
+        }),
       }))
       .filter((offer) => offer.codes.length > 0)
       .filter((offer) => {
         if (!query) return true;
         const blob = [
           offer.title,
-          offer.summary[lang],
-          ...offer.codes.flatMap((code) => [code.code, code.note?.[lang] ?? ""]),
+          ...Object.values(offer.summary),
+          ...offer.codes.flatMap((code) => [code.code, ...Object.values(code.note ?? {})]),
         ]
           .join(" ")
           .toLowerCase();
@@ -198,13 +109,14 @@ export function CodesPage() {
     window.setTimeout(() => setCopied((current) => (current === id ? null : current)), 1600);
   }
 
-  const eraLabels: Record<Era | "all", string> = {
+  const eraLabels = {
+    live: t.eraLive,
     all: t.eraAll,
-    "2026": t.era2026,
+    "2026": "2026",
     "2025": t.era2025,
     "2024": t.era2024,
     archive: t.eraArchive,
-  };
+  } satisfies Record<EraFilter, string>;
 
   return (
     <div className="min-h-screen">
@@ -228,14 +140,18 @@ export function CodesPage() {
               id="lang"
               value={lang}
               onChange={(event) => {
-                const next: Lang = event.target.value === "en" ? "en" : "de";
+                const next = event.target.value;
+                if (!isLang(next)) return;
                 setLang(next);
                 applyLang(next);
               }}
-              className="h-11 w-28 rounded-lg border border-line bg-surface px-2 text-sm text-fg sm:w-36"
+              className="h-11 max-w-44 rounded-lg border border-line bg-surface px-2 text-sm text-fg"
             >
-              <option value="de">Deutsch</option>
-              <option value="en">English</option>
+              {langs.map((id) => (
+                <option key={id} value={id}>
+                  {endonyms[id]}
+                </option>
+              ))}
             </select>
             <button
               type="button"
@@ -324,7 +240,7 @@ export function CodesPage() {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={t.eraAll}>
-            {(["2026", ...eraOrder.filter((id) => id !== "2026"), "all"] as const).map((id) => (
+            {(["live", "2025", "2024", "archive", "all"] as const).map((id) => (
               <button
                 key={id}
                 type="button"
@@ -340,6 +256,7 @@ export function CodesPage() {
             ))}
           </div>
           {search.trim() ? <p className="mt-3 text-sm text-subtle">{t.searchAll}</p> : null}
+          {!search.trim() && era === "live" ? <p className="mt-3 text-sm text-subtle">{t.eraLiveHint}</p> : null}
           {!search.trim() && (era === "2025" || era === "2024") ? (
             <p className="mt-3 text-sm text-subtle">{t.eraOlder}</p>
           ) : null}
@@ -395,18 +312,20 @@ function OfferCard({
 }: {
   offer: Offer;
   lang: Lang;
-  t: (typeof ui)[Lang];
+  t: Ui;
   copied: string | null;
   onCopy: (id: string, value: string) => void;
 }) {
+  const shownWorks = offer.codes.every((code) => codeWorks(offer, code));
   const marker =
     offer.era === "2026" && offer.added >= "2026-09-01"
       ? t.fresh
-      : offer.era === "archive"
+      : !shownWorks
         ? t.uncertain
         : offer.era === "2026"
           ? null
           : t.older;
+  const warn = marker === t.uncertain;
   return (
     <article className="panel rounded-xl p-5 sm:p-6">
       <div className="flex flex-wrap items-center gap-2">
@@ -418,7 +337,7 @@ function OfferCard({
           <span
             className={
               "rounded-md bg-raised px-2 py-1 text-xs font-medium " +
-              (offer.era === "archive" ? "text-warn" : "text-steel")
+              (warn ? "text-warn" : "text-steel")
             }
           >
             {marker}
