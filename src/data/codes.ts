@@ -16,6 +16,8 @@ export type StoreCode = {
   note?: Copy;
   /** Set only when this one code disagrees with the pack. Aktuell shows working codes. */
   live?: boolean;
+  /** One portrait, when this code is its own avatar rather than a shared pack. */
+  image?: string;
 };
 
 export type Offer = {
@@ -33,8 +35,14 @@ export type Offer = {
   codes: StoreCode[];
 };
 
-function row(region: RegionId, code: string, note?: Copy, live?: boolean): StoreCode {
-  return { region, code, ...(note ? { note } : {}), ...(live !== undefined ? { live } : {}) };
+function row(region: RegionId, code: string, note?: Copy, live?: boolean, image?: string): StoreCode {
+  return {
+    region,
+    code,
+    ...(note ? { note } : {}),
+    ...(live !== undefined ? { live } : {}),
+    ...(image ? { image } : {}),
+  };
 }
 
 /** A code is in Aktuell when it was still redeeming in October 2026. */
@@ -302,7 +310,13 @@ export const offers: Offer[] = [
       name: "PSNProfiles",
       url: "https://forum.psnprofiles.com/topic/200663-list-of-active-psn-avatar-codes/",
     },
-    codes: [row("americas", "RBKQ-T9TL-KJ3M")],
+    codes: [
+      row("americas", "RBKQ-T9TL-KJ3M"),
+      row("europe", "ENR6-2E7R-77QX", phrases.euMeAfAuNz),
+      row("asia", "DHBC-86B5-MX3J", phrases.restAsia),
+      row("korea", "3LQ6-NNR3-HG3Q"),
+      row("japan", "3AT8-X3M6-QXGJ"),
+    ],
   },
   {
     id: "deathloop",
@@ -326,7 +340,13 @@ export const offers: Offer[] = [
       name: "PSNProfiles",
       url: "https://forum.psnprofiles.com/topic/200663-list-of-active-psn-avatar-codes/",
     },
-    codes: [row("americas", "7673-6HNN-K887")],
+    codes: [
+      row("americas", "7673-6HNN-K887"),
+      row("europe", "3XF7-QANX-CJ6A", phrases.euMeAfAuNz),
+      row("asia", "KB3H-FQNJ-5BCT", phrases.restAsia),
+      row("korea", "AN6J-FGNM-CCH7"),
+      row("japan", "QQH5-75NA-3TBP"),
+    ],
   },
   {
     id: "tsushima",
@@ -398,6 +418,44 @@ export const offers: Offer[] = [
     ],
   },
   {
+    id: "wrap-up-2025",
+    kind: "avatar",
+    era: "2025",
+    images: ["/avatars/wrap25.webp"],
+    title: "Wrap-Up 2025",
+    added: "2025-12-09",
+    summary: summaries["wrap-up-2025"],
+    source: {
+      name: "hotukdeals",
+      url: "https://www.hotukdeals.com/deals/free-playstation-wrap-up-avatar-4761572",
+    },
+    codes: [
+      row("americas", "J4G3-LXD3-G747"),
+      row("europe", "7ACM-L4L9-MB4T", phrases.alsoInAuNzMeAf),
+      row("asia", "5R6P-GN58-J874", phrases.restAsia),
+      row("japan", "5EQM-C5NX-DX29"),
+    ],
+  },
+  {
+    id: "santas-workshop",
+    kind: "avatar",
+    era: "2025",
+    images: ["/avatars/santa.webp"],
+    title: "Santa's Workshop",
+    added: "2025-12-24",
+    summary: summaries["santas-workshop"],
+    source: {
+      name: "Webnetic",
+      url: "https://x.com/Webnetic2/status/2003780198483816571",
+    },
+    codes: [
+      row("americas", "QERQ-XC3K-5TEX"),
+      row("europe", "3KHG-8DCN-RGXB"),
+      row("asia", "PPHH-N774-EC97", phrases.restAsia),
+      row("japan", "2P83-NL68-9C72"),
+    ],
+  },
+  {
     id: "advent-2024",
     kind: "avatar",
     era: "2024",
@@ -411,34 +469,53 @@ export const offers: Offer[] = [
     codes: [
       row("europe", "TKRQ-K433-2N22", dayNote(11, 25)),
       row("europe", "NJE4-D8XE-KMTT", dayNote(11, 26)),
-      row("europe", "262Q-F5F2-JA95", dayNote(11, 27)),
-      row("europe", "HTC3-CJAX-GX5K", dayNote(11, 28)),
-      row("europe", "TTLT-JFJQ-XHK2", dayNote(11, 29)),
+      row("europe", "262Q-F5F2-JA95", dayNote(11, 27), undefined, "/avatars/advent-1127.webp"),
+      row("europe", "HTC3-CJAX-GX5K", dayNote(11, 28), undefined, "/avatars/advent-1128.webp"),
+      row("europe", "TTLT-JFJQ-XHK2", dayNote(11, 29), undefined, "/avatars/advent-1129.webp"),
       row("europe", "GLBH-N8A6-89KJ", dayNote(11, 30)),
-      row("europe", "K23G-P29H-T54L", dayNote(12, 1)),
-      row("europe", "PT2B-2E8M-HFH2", dayNote(12, 2)),
-      row("europe", "CTML-8GN6-8P24", dayNote(12, 3)),
-      row("europe", "NGB4-LF4L-N2J4", dayNote(12, 4)),
-      row("europe", "JNGX-ALQ5-P43G", dayNote(12, 5)),
-      row("europe", "QAGC-4BP9-Q7N7", dayNote(12, 6)),
-      row("europe", "6DQ9-F969-ME4J", dayNote(12, 7)),
-      row("europe", "RPXF-B95N-DG5F", dayNote(12, 8)),
+      row("europe", "K23G-P29H-T54L", dayNote(12, 1), undefined, "/avatars/advent-1201.webp"),
+      row("europe", "PT2B-2E8M-HFH2", dayNote(12, 2), undefined, "/avatars/advent-1202.webp"),
+      row("europe", "CTML-8GN6-8P24", dayNote(12, 3), undefined, "/avatars/advent-1203.webp"),
+      row("europe", "NGB4-LF4L-N2J4", dayNote(12, 4), undefined, "/avatars/advent-1204.webp"),
+      row("europe", "JNGX-ALQ5-P43G", dayNote(12, 5), undefined, "/avatars/advent-1205.webp"),
+      row("europe", "QAGC-4BP9-Q7N7", dayNote(12, 6), undefined, "/avatars/advent-1206.webp"),
+      row("europe", "6DQ9-F969-ME4J", dayNote(12, 7), undefined, "/avatars/advent-1207.webp"),
+      row("europe", "RPXF-B95N-DG5F", dayNote(12, 8), undefined, "/avatars/advent-1208.webp"),
       row("europe", "NG4X-MLCB-6KN2", dayNote(12, 9)),
-      row("europe", "FE29-C5HF-9Q95", dayNote(12, 10)),
-      row("europe", "94FF-M3RM-MTB5", dayNote(12, 11)),
-      row("europe", "M5H8-NXGN-6B2T", dayNote(12, 12)),
-      row("europe", "9AB5-HK9B-A2NE", dayNote(12, 13)),
-      row("europe", "9PM5-B7FP-E9L8", dayNote(12, 14)),
-      row("europe", "TP59-LNKQ-A6JP", dayNote(12, 15)),
-      row("europe", "4MRG-8K3A-BBL7", dayNote(12, 16)),
-      row("europe", "EX27-XRFF-DPGD", dayNote(12, 17)),
-      row("europe", "QKMA-CMET-862Q", dayNote(12, 18)),
-      row("europe", "FMGX-65C4-QRMP", dayNote(12, 19)),
-      row("europe", "G2JD-JMNR-HPAC", dayNote(12, 20)),
-      row("europe", "85CJ-GX64-9QGH", dayNote(12, 21)),
-      row("europe", "47QB-MXRN-ML83", dayNote(12, 22)),
-      row("europe", "LH7D-BA4R-LJQD", dayNote(12, 23)),
-      row("europe", "5XCL-4HRC-KFXT", dayNote(12, 24)),
+      row("europe", "FE29-C5HF-9Q95", dayNote(12, 10), undefined, "/avatars/advent-1210.webp"),
+      row("europe", "94FF-M3RM-MTB5", dayNote(12, 11), undefined, "/avatars/advent-1211.webp"),
+      row("europe", "M5H8-NXGN-6B2T", dayNote(12, 12), undefined, "/avatars/advent-1212.webp"),
+      row("europe", "9AB5-HK9B-A2NE", dayNote(12, 13), undefined, "/avatars/advent-1213.webp"),
+      row("europe", "9PM5-B7FP-E9L8", dayNote(12, 14), undefined, "/avatars/advent-1214.webp"),
+      row("europe", "TP59-LNKQ-A6JP", dayNote(12, 15), undefined, "/avatars/advent-1215.webp"),
+      row("europe", "4MRG-8K3A-BBL7", dayNote(12, 16), undefined, "/avatars/advent-1216.webp"),
+      row("europe", "EX27-XRFF-DPGD", dayNote(12, 17), undefined, "/avatars/advent-1217.webp"),
+      row("europe", "QKMA-CMET-862Q", dayNote(12, 18), undefined, "/avatars/advent-1218.webp"),
+      row("europe", "FMGX-65C4-QRMP", dayNote(12, 19), undefined, "/avatars/advent-1219.webp"),
+      row("europe", "G2JD-JMNR-HPAC", dayNote(12, 20), undefined, "/avatars/advent-1220.webp"),
+      row("europe", "85CJ-GX64-9QGH", dayNote(12, 21), undefined, "/avatars/advent-1221.webp"),
+      row("europe", "47QB-MXRN-ML83", dayNote(12, 22), undefined, "/avatars/advent-1222.webp"),
+      row("europe", "LH7D-BA4R-LJQD", dayNote(12, 23), undefined, "/avatars/advent-1223.webp"),
+      row("europe", "5XCL-4HRC-KFXT", dayNote(12, 24), undefined, "/avatars/advent-1224.webp"),
+    ],
+  },
+  {
+    id: "pig",
+    kind: "avatar",
+    era: "2024",
+    images: ["/avatars/pig.webp"],
+    title: "The Pig",
+    added: "2024-12-08",
+    summary: summaries["pig"],
+    source: {
+      name: "PSNProfiles",
+      url: "https://forum.psnprofiles.com/topic/171273-free-avatar/",
+    },
+    codes: [
+      row("americas", "QP8T-D7BX-TKLE"),
+      row("europe", "7XQC-R6TF-4J9A"),
+      row("asia", "PDDX-MB67-L2GD", phrases.restAsia),
+      row("japan", "4A34-8HF4-2N97"),
     ],
   },
   {
@@ -527,6 +604,24 @@ export const offers: Offer[] = [
       row("europe", "LFG8-GH4X-TMLB", same("Kaishu Katsu")),
       row("europe", "J823-QGD8-K7R8", same("Kondo Isami")),
       row("europe", "LJB2-GNGK-L7G5", same("Genzui Kusaka")),
+    ],
+  },
+  {
+    id: "wrap-up-2023",
+    kind: "avatar",
+    era: "archive",
+    images: ["/avatars/wrap23.webp"],
+    title: "Wrap-Up 2023",
+    added: "2023-12-12",
+    summary: summaries["wrap-up-2023"],
+    source: {
+      name: "Wario64",
+      url: "https://x.com/Wario64/status/1734724359250382869",
+    },
+    codes: [
+      row("americas", "HKPP-BJ46-E64X"),
+      row("europe", "EX37-RGC7-XXN6"),
+      row("japan", "X8NN-6HKA-H3R4"),
     ],
   },
   {

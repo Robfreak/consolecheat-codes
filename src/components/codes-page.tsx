@@ -383,10 +383,21 @@ function OfferCard({
               key={id}
               className="flex flex-col gap-3 rounded-lg bg-raised px-3 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
-              <div className="min-w-0">
-                <p className="text-xs font-medium uppercase text-subtle">{t.regions[code.region]}</p>
-                <p className="mt-1 font-mono text-lg tracking-wide text-fg">{code.code}</p>
-                {code.note ? <p className="mt-1 text-sm text-muted">{code.note[lang]}</p> : null}
+              <div className="flex min-w-0 items-center gap-3">
+                {code.image ? (
+                  <img
+                    src={code.image}
+                    alt=""
+                    width={72}
+                    height={72}
+                    className="size-[4.5rem] shrink-0 rounded-lg border border-line bg-bg object-cover"
+                  />
+                ) : null}
+                <div className="min-w-0">
+                  <p className="text-xs font-medium uppercase text-subtle">{t.regions[code.region]}</p>
+                  <p className="mt-1 font-mono text-lg tracking-wide text-fg">{code.code}</p>
+                  {code.note ? <p className="mt-1 text-sm text-muted">{code.note[lang]}</p> : null}
+                </div>
               </div>
               <button
                 type="button"
