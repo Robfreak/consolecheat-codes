@@ -417,10 +417,6 @@ function OfferCard({
 
 function Mark() {
   return (
-    <svg viewBox="0 0 32 32" className="size-9 shrink-0" aria-hidden="true">
-      <rect width="32" height="32" rx="8" className="fill-raised" />
-      <circle cx="16" cy="12" r="5" className="fill-steel" />
-      <path d="M7 27c1.4-6 4.5-8.4 9-8.4S23.6 21 25 27H7z" className="fill-fg" />
-    </svg>
+    <img src="/logo.webp" alt="" width={40} height={40} className="size-10 shrink-0 rounded-lg" />
   );
 }
